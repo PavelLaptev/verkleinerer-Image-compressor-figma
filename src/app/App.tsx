@@ -1,14 +1,18 @@
 import * as React from 'react';
 import styles from './app.module.scss';
 
-import Resizer from './components/Resizer';
-
 // Application
 const App = ({}) => {
+    React.useEffect(() => {}, []);
+
+    const addToQueue = () => {
+        parent.postMessage({pluginMessage: {type: 'add-to-queue'}}, '*');
+    };
+
     return (
         <section className={styles.wrap}>
             <h1>Hello World</h1>
-            <Resizer />
+            <button onClick={addToQueue}>add to queue</button>
         </section>
     );
 };

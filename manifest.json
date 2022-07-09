@@ -1,5 +1,5 @@
 {
-    "name": "WebP convertor",
+    "name": "WebP Convertor",
     "id": "1127372261563355491",
     "api": "1.0.0",
     "main": "dist/code.js",
