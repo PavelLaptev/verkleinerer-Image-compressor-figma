@@ -4,62 +4,85 @@ figma.skipInvisibleInstanceChildren = true;
 
 const pluginFrameSize = {
     width: 340,
-    height: 240,
+    height: 540,
 };
 
 figma.showUI(__html__, pluginFrameSize);
 
 figma.ui.onmessage = async msg => {
-    // Create img and fill
-    if (msg.type === 'add-to-queue') {
-        if (figma.currentPage.selection.length > 0) {
+    if (figma.currentPage.selection.length > 0) {
+        // SEND SELECTED NODES TO UI
+        if (msg.type === 'add-to-queue') {
             const selection = figma.currentPage.selection;
 
-            console.log(selection);
+            // console.log(selection);
 
-            const previewsBase64 = await Promise.all(
-                selection.map(async item => {
-                    return await item
-                        .exportAsync({
-                            format: 'PNG',
-                            constraint: {
-                                type: 'WIDTH',
-                                value: 200,
+            selection.map(async item => {
+                return await item
+                    .exportAsync({
+                        format: 'PNG',
+                        constraint: {
+                            type: 'WIDTH',
+                            value: 100,
+                        },
+                    })
+                    .then(data => {
+                        figma.ui.postMessage({
+                            type: 'imageData',
+                            imageData: {
+                                id: item.id,
+                                name: item.name,
+                                size: {
+                                    width: item.width,
+                                    height: item.height,
+                                },
+                                preview: figma.base64Encode(data),
                             },
-                        })
-                        .then(data => {
-                            return figma.base64Encode(data);
                         });
-                })
-            );
-
-            console.log(previewsBase64);
-
-            // const selectedItems = figma.currentPage.selection[0];
-
-            // await selectedItems
-            //     .exportAsync({
-            //         format: 'PNG',
-            //         constraint: {type: 'SCALE', value: 2},
-            //     })
-            //     .then(data => {
-            //         const base64 = figma.base64Encode(data);
-
-            //         figma.ui.postMessage({
-            //             type: 'add-to-queue',
-            //             base64: base64,
-            //     });
-
-            // console.log(bytes);
+                    });
+            });
 
             figma.notify('Added to queue', {
                 timeout: 2000,
             });
-        } else {
-            figma.notify('📌 Select something', {
-                timeout: 2000,
-            });
         }
+
+        // RECIVE SELECTED NODES IDS FROM UI
+        if (msg.type === 'send-ids') {
+            const selecteditems = msg.ids.map(id => {
+                return figma.getNodeById(id);
+            });
+
+            console.log(selecteditems);
+
+            const exportData = await Promise.all(
+                selecteditems.map(async item => {
+                    const data = await item.exportAsync({
+                        format: 'PNG',
+                        constraint: {
+                            type: 'SCALE',
+                            value: Number(msg.scaleRatio),
+                        },
+                    });
+
+                    return figma.base64Encode(data);
+                })
+            );
+
+            console.log(exportData);
+        }
+    } else {
+        figma.notify('📌 Select something', {
+            timeout: 2000,
+        });
+    }
+
+    // CHANGE SIZE
+    if (msg.type === 'change-size' || msg.type === 'reset') {
+        figma.ui.resize(pluginFrameSize.width, Math.round(msg.frameHeight));
+    }
+    if (msg.type === 'manual-resize') {
+        figma.ui.resize(Math.round(msg.size.width), Math.round(msg.size.height));
     }
 };
 
