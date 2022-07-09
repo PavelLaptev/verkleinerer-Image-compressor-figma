@@ -7,36 +7,48 @@ const pluginFrameSize = {
     height: 240,
 };
 
-function arrayBufferToBase64(buffer) {
-    var binary = '';
-    var bytes = new Uint8Array(buffer);
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-}
-
 figma.showUI(__html__, pluginFrameSize);
 
 figma.ui.onmessage = async msg => {
     // Create img and fill
     if (msg.type === 'add-to-queue') {
         if (figma.currentPage.selection.length > 0) {
-            const selectedItems = figma.currentPage.selection[0];
+            const selection = figma.currentPage.selection;
 
-            await selectedItems
-                .exportAsync({
-                    format: 'PNG',
-                    constraint: {type: 'SCALE', value: 2},
+            console.log(selection);
+
+            const previewsBase64 = await Promise.all(
+                selection.map(async item => {
+                    return await item
+                        .exportAsync({
+                            format: 'PNG',
+                            constraint: {
+                                type: 'WIDTH',
+                                value: 200,
+                            },
+                        })
+                        .then(data => {
+                            return figma.base64Encode(data);
+                        });
                 })
-                .then(data => {
-                    const base64 = figma.base64Encode(data);
+            );
 
-                    figma.ui.postMessage({
-                        type: 'add-to-queue',
-                        base64: base64,
-                });
+            console.log(previewsBase64);
+
+            // const selectedItems = figma.currentPage.selection[0];
+
+            // await selectedItems
+            //     .exportAsync({
+            //         format: 'PNG',
+            //         constraint: {type: 'SCALE', value: 2},
+            //     })
+            //     .then(data => {
+            //         const base64 = figma.base64Encode(data);
+
+            //         figma.ui.postMessage({
+            //             type: 'add-to-queue',
+            //             base64: base64,
+            //     });
 
             // console.log(bytes);
 
