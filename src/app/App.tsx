@@ -1,8 +1,24 @@
 import * as React from 'react';
 import styles from './app.module.scss';
 
-import Resizer from './components/Resizer';
+import imageCompression from 'browser-image-compression';
+
+import {zipAndSave} from './utils';
+
+import ResizeKnob from './components/ResizeKnob';
 import QueueItem from './components/QueueItem';
+
+const resizeFile = async (file: File) => {
+    return await imageCompression(file, {
+        fileType: 'image/webp',
+    })
+        .then(compressedFile => {
+            return compressedFile as File;
+        })
+        .catch(error => {
+            console.error(error.message);
+        });
+};
 
 // Application
 const App = ({}) => {
@@ -10,7 +26,7 @@ const App = ({}) => {
     const [imageDataArray, setImageDataArray] = React.useState([]);
 
     React.useEffect(() => {
-        onmessage = e => {
+        onmessage = async e => {
             if (e.data.pluginMessage?.type === 'imageData') {
                 // console.log(imageData, e.data.pluginMessage.imageData.id);
                 // console.log(imageData);
@@ -34,6 +50,23 @@ const App = ({}) => {
                 });
 
                 //
+            }
+
+            if (e.data.pluginMessage?.type === 'exported-img-data') {
+                const exportedData = e.data.pluginMessage.exportedData;
+
+                const compresssedFiles = await Promise.all(
+                    exportedData.map(async img => {
+                        const blob = new Blob([img.data], {type: 'image/png'}) as Blob;
+                        const file = new File([blob], img.name, {type: 'image/png'}) as File;
+
+                        // console.log(await resizeFile(file));
+                        return (await resizeFile(file)) as File;
+                    }) as Array<File>
+                );
+
+                zipAndSave(compresssedFiles);
+                // console.log(compresssedFiles);
             }
         };
     }, []);
@@ -77,7 +110,7 @@ const App = ({}) => {
                     );
                 })}
             </section>
-            <Resizer />
+            <ResizeKnob />
         </>
     );
 };

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from './styles.module.scss';
 
-const Resizer: React.FunctionComponent = () => {
+const ResizeKnob: React.FunctionComponent = () => {
     const resizerRef = React.useRef(null);
     const [pressed, setPressed] = React.useState(false);
 
@@ -39,4 +39,4 @@ const Resizer: React.FunctionComponent = () => {
     return <div ref={resizerRef} className={styles.resizer} />;
 };
 
-export default Resizer;
+export default ResizeKnob;

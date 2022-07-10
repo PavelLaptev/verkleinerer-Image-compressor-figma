@@ -53,9 +53,9 @@ figma.ui.onmessage = async msg => {
                 return figma.getNodeById(id);
             });
 
-            console.log(selecteditems);
+            // console.log(selecteditems);
 
-            const exportData = await Promise.all(
+            const exportedData = await Promise.all(
                 selecteditems.map(async item => {
                     const data = await item.exportAsync({
                         format: 'PNG',
@@ -65,11 +65,17 @@ figma.ui.onmessage = async msg => {
                         },
                     });
 
-                    return figma.base64Encode(data);
+                    return {
+                        name: item.name,
+                        data: data,
+                    };
                 })
             );
 
-            console.log(exportData);
+            figma.ui.postMessage({
+                type: 'exported-img-data',
+                exportedData: exportedData,
+            });
         }
     } else {
         figma.notify('📌 Select something', {
