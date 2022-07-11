@@ -7,13 +7,13 @@ interface DropdownProps {
     value?: string;
 }
 
-interface InputTextProps {
+interface TextInputProps {
     value?: string;
-    mode?: "text" | "number";
+    placeholder?: string;
     onChange?: (value: string) => void;
 }
 
-interface InputBaseProps extends InputTextProps, DropdownProps {
+interface InputBaseProps extends TextInputProps, DropdownProps {
     type: "input" | "dropdown";
     label: string;
 }
@@ -32,7 +32,7 @@ const Dropdown: React.FC<DropdownProps> = props => {
     );
 };
 
-const InputText: React.FC<InputTextProps> = props => {
+const TextInput: React.FC<TextInputProps> = props => {
     return <input className={styles.input} value={props.value} onChange={e => props.onChange(e.target.value)} />;
 };
 
@@ -41,7 +41,7 @@ const Input: React.FC<InputBaseProps> = props => {
     const addInputComponent = () => {
         switch (props.type) {
             case "input":
-                return <InputText {...props} />;
+                return <TextInput {...props} />;
             case "dropdown":
                 return <Dropdown {...props} />;
             default:

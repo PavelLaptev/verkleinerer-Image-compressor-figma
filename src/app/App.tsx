@@ -24,8 +24,12 @@ const resizeFile = async (file: File) => {
 // Application
 const App = ({}) => {
     const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const formatTypes = ["WEBP", "PNG", "JPG"];
 
     const [scaleRatio, setScaleRatio] = React.useState(scaleOptions[1]);
+    const [formatType, setFormatType] = React.useState(formatTypes[0]);
+    const [quality, setQuality] = React.useState(80);
+
     const [imageDataArray, setImageDataArray] = React.useState([]);
 
     React.useEffect(() => {
@@ -89,28 +93,40 @@ const App = ({}) => {
         );
     };
 
+    const handleQalityChange = value => {
+        // allow only numbers
+        if (value.match(/^[0-9]*$/)) {
+            setQuality(value);
+        }
+    };
+
     return (
         <>
             <section className={styles.wrap}>
                 <h1>Hello World</h1>
-                <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    defaultValue={scaleRatio}
-                    onChange={event => setScaleRatio(Number((event.target as HTMLInputElement).value))}
-                />
-                <Input type="input" label="Input" value="werwe" />
-                <Input
-                    type="dropdown"
-                    label="Input"
-                    value={`@${scaleRatio}x`}
-                    options={scaleOptions.map(item => `@${item}x`)}
-                    onChange={value => {
-                        const ratio = Number(value.replace(/[@x]/g, ""));
-                        setScaleRatio(ratio);
-                    }}
-                />
+                <section className={styles.inputs}>
+                    <Input
+                        type="dropdown"
+                        label="Format:"
+                        value={formatType}
+                        options={formatTypes}
+                        onChange={value => {
+                            setFormatType(value);
+                        }}
+                    />
+                    <Input
+                        type="dropdown"
+                        label="Scale:"
+                        value={`@${scaleRatio}x`}
+                        options={scaleOptions.map(item => `@${item}x`)}
+                        onChange={value => {
+                            const ratio = Number(value.replace(/[@x]/g, ""));
+                            setScaleRatio(ratio);
+                        }}
+                    />
+                    <Input type="input" label="Quality:" value={`${quality}`} onChange={handleQalityChange} />
+                </section>
+
                 <button onClick={addToQueue}>add to queue</button>
                 <button onClick={sendIds}>convert to WebP</button>
 
