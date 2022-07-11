@@ -1,4 +1,11 @@
-@import './font-face';
+@import "./font-face";
+
+:root {
+    --main-color: #000;
+    --accent-color: #7785ff;
+
+    --border-radius: 10px;
+}
 
 *,
 *:before,
@@ -11,7 +18,7 @@
 
 body {
     overflow: hidden;
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 12px;
     margin: 0;
 }

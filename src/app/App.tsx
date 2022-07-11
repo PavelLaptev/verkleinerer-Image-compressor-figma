@@ -1,16 +1,17 @@
-import * as React from 'react';
-import styles from './app.module.scss';
+import * as React from "react";
+import styles from "./app.module.scss";
 
-import imageCompression from 'browser-image-compression';
+import imageCompression from "browser-image-compression";
 
-import {zipAndSave} from './utils';
+import {zipAndSave} from "./utils";
 
-import ResizeKnob from './components/ResizeKnob';
-import QueueItem from './components/QueueItem';
+import Input from "./components/Input";
+import ResizeKnob from "./components/ResizeKnob";
+import QueueItem from "./components/QueueItem";
 
 const resizeFile = async (file: File) => {
     return await imageCompression(file, {
-        fileType: 'image/webp',
+        fileType: "image/webp",
     })
         .then(compressedFile => {
             return compressedFile as File;
@@ -22,12 +23,14 @@ const resizeFile = async (file: File) => {
 
 // Application
 const App = ({}) => {
-    const [scaleRatio, setScaleRatio] = React.useState('2');
+    const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    const [scaleRatio, setScaleRatio] = React.useState(scaleOptions[1]);
     const [imageDataArray, setImageDataArray] = React.useState([]);
 
     React.useEffect(() => {
         onmessage = async e => {
-            if (e.data.pluginMessage?.type === 'imageData') {
+            if (e.data.pluginMessage?.type === "imageData") {
                 // console.log(imageData, e.data.pluginMessage.imageData.id);
                 // console.log(imageData);
 
@@ -52,13 +55,13 @@ const App = ({}) => {
                 //
             }
 
-            if (e.data.pluginMessage?.type === 'exported-img-data') {
+            if (e.data.pluginMessage?.type === "exported-img-data") {
                 const exportedData = e.data.pluginMessage.exportedData;
 
                 const compresssedFiles = await Promise.all(
                     exportedData.map(async img => {
-                        const blob = new Blob([img.data], {type: 'image/png'}) as Blob;
-                        const file = new File([blob], img.name, {type: 'image/png'}) as File;
+                        const blob = new Blob([img.data], {type: "image/png"}) as Blob;
+                        const file = new File([blob], img.name, {type: "image/png"}) as File;
 
                         // console.log(await resizeFile(file));
                         return (await resizeFile(file)) as File;
@@ -72,7 +75,7 @@ const App = ({}) => {
     }, []);
 
     const addToQueue = () => {
-        parent.postMessage({pluginMessage: {type: 'add-to-queue'}}, '*');
+        parent.postMessage({pluginMessage: {type: "add-to-queue"}}, "*");
     };
 
     const handleRemove = id => {
@@ -81,8 +84,8 @@ const App = ({}) => {
 
     const sendIds = () => {
         parent.postMessage(
-            {pluginMessage: {type: 'send-ids', scaleRatio: scaleRatio, ids: imageDataArray.map(item => item.id)}},
-            '*'
+            {pluginMessage: {type: "send-ids", scaleRatio: scaleRatio, ids: imageDataArray.map(item => item.id)}},
+            "*"
         );
     };
 
@@ -95,7 +98,18 @@ const App = ({}) => {
                     min="1"
                     max="10"
                     defaultValue={scaleRatio}
-                    onMouseUp={event => setScaleRatio((event.target as HTMLInputElement).value)}
+                    onChange={event => setScaleRatio(Number((event.target as HTMLInputElement).value))}
+                />
+                <Input type="input" label="Input" value="werwe" />
+                <Input
+                    type="dropdown"
+                    label="Input"
+                    value={`@${scaleRatio}x`}
+                    options={scaleOptions.map(item => `@${item}x`)}
+                    onChange={value => {
+                        const ratio = Number(value.replace(/[@x]/g, ""));
+                        setScaleRatio(ratio);
+                    }}
                 />
                 <button onClick={addToQueue}>add to queue</button>
                 <button onClick={sendIds}>convert to WebP</button>
