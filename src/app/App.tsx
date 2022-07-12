@@ -125,6 +125,7 @@ const App = ({}) => {
                         }}
                     />
                     <Input type="input" label="Quality:" value={`${quality}`} onChange={handleQalityChange} />
+                    <Input type="input" label="Max (kb):" value={`${quality}`} />
                 </section>
 
                 <button onClick={addToQueue}>add to queue</button>
