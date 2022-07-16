@@ -5,12 +5,15 @@
 
 .settings {
     padding: 20px;
-    background-color: #f6f6fc;
+    background-color: var(--light-color);
 }
 
 .queueSection {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 260px;
 }
 
 .queue {
@@ -26,4 +29,20 @@
 .placeholder {
     display: flex;
     flex-direction: column;
+    max-width: 150px;
+    display: flex;
+    align-items: center;
+
+    svg {
+        margin-bottom: 15px;
+    }
+
+    span {
+        font-family: "Inter", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--main-color);
+        margin-bottom: 10px;
+        text-align: center;
+    }
 }

@@ -159,11 +159,11 @@ const App = ({}) => {
                     </section>
 
                     <Button onClick={addToQueue} label="Add to queue" />
-                    <Button onClick={sendIds} label="Convert to WebP" />
+                    {imageDataArray.length !== 0 ? <Button onClick={sendIds} label="Convert to WebP" /> : null}
                 </section>
 
                 <section className={styles.queueSection}>
-                    <PlaceHolderImage />
+                    {imageDataArray.length === 0 ? <PlaceHolderImage /> : null}
                     <section className={styles.queue}>
                         {imageDataArray.map(imageData => {
                             return (
