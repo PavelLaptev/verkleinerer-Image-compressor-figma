@@ -1,0 +1,15 @@
+.button {
+    background-color: black;
+    height: 40px;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    outline: none;
+
+    span {
+        color: white;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+    }
+}

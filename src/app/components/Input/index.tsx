@@ -14,6 +14,8 @@ interface TextInputProps {
 }
 
 interface InputBaseProps extends TextInputProps, DropdownProps {
+    classname?: string;
+    minWidth?: string;
     type: "input" | "dropdown";
     label: string;
 }
@@ -50,11 +52,21 @@ const Input: React.FC<InputBaseProps> = props => {
     };
 
     return (
-        <div className={styles.wrap}>
+        <div
+            className={`${styles.wrap} ${props.classname}`}
+            style={{
+                minWidth: props.minWidth,
+            }}
+        >
             <label className={styles.label}>{props.label}</label>
             {addInputComponent()}
         </div>
     );
+};
+
+Input.defaultProps = {
+    classname: "",
+    minWidth: "unset",
 };
 
 export default Input;

@@ -1,7 +1,29 @@
 .wrap {
-    padding: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings {
+    padding: 20px;
+    background-color: #f6f6fc;
+}
+
+.queueSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.queue {
+    display: flex;
+    flex-direction: column;
 }
 
 .inputs {
     display: flex;
+    margin-bottom: 20px;
+}
+
+.placeholder {
+    display: flex;
+    flex-direction: column;
 }
