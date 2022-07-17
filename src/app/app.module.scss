@@ -11,19 +11,36 @@
 .queueSection {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 260px;
+    padding: 20px;
 }
 
 .queue {
     display: flex;
     flex-direction: column;
+    border-radius: var(--border-radius);
 }
 
 .inputs {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 10px;
     margin-bottom: 20px;
+
+    @media (max-width: 388px) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 320px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.placeholderWrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 220px;
 }
 
 .placeholder {

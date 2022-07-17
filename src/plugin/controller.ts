@@ -1,18 +1,19 @@
+console.clear();
+
 figma.skipInvisibleInstanceChildren = true;
 
 // Show UI
 
 const pluginFrameSize = {
-    width: 380,
-    height: 480,
+    width: 400,
+    height: 440,
 };
 
 figma.showUI(__html__, pluginFrameSize);
 
 figma.ui.onmessage = async msg => {
-    if (figma.currentPage.selection.length > 0) {
-        // SEND SELECTED NODES TO UI
-        if (msg.type === "add-to-queue") {
+    if (msg.type === "add-to-queue") {
+        if (figma.currentPage.selection.length > 0) {
             const selection = figma.currentPage.selection;
 
             // console.log(selection);
@@ -45,41 +46,41 @@ figma.ui.onmessage = async msg => {
             figma.notify("Added to queue", {
                 timeout: 2000,
             });
-        }
-
-        // RECIVE SELECTED NODES IDS FROM UI
-        if (msg.type === "send-ids") {
-            const selecteditems = msg.ids.map(id => {
-                return figma.getNodeById(id);
-            });
-
-            // console.log(selecteditems);
-
-            const exportedData = await Promise.all(
-                selecteditems.map(async item => {
-                    const data = await item.exportAsync({
-                        format: "PNG",
-                        constraint: {
-                            type: "SCALE",
-                            value: Number(msg.scaleRatio),
-                        },
-                    });
-
-                    return {
-                        name: item.name,
-                        data: data,
-                    };
-                })
-            );
-
-            figma.ui.postMessage({
-                type: "exported-img-data",
-                exportedData: exportedData,
+        } else {
+            figma.notify("📌 Select something", {
+                timeout: 2000,
             });
         }
-    } else {
-        figma.notify("📌 Select something", {
-            timeout: 2000,
+    }
+
+    // RECIVE SELECTED NODES IDS FROM UI
+    if (msg.type === "send-ids") {
+        const selecteditems = msg.ids.map(id => {
+            return figma.getNodeById(id);
+        });
+
+        // console.log(selecteditems);
+
+        const exportedData = await Promise.all(
+            selecteditems.map(async item => {
+                const data = await item.exportAsync({
+                    format: "PNG",
+                    constraint: {
+                        type: "SCALE",
+                        value: Number(msg.scaleRatio),
+                    },
+                });
+
+                return {
+                    name: item.name,
+                    data: data,
+                };
+            })
+        );
+
+        figma.ui.postMessage({
+            type: "exported-img-data",
+            exportedData: exportedData,
         });
     }
 

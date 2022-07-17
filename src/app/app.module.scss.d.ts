@@ -3,6 +3,7 @@
 interface CssExports {
   'inputs': string;
   'placeholder': string;
+  'placeholderWrap': string;
   'queue': string;
   'queueSection': string;
   'settings': string;

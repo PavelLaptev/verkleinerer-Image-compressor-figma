@@ -10,9 +10,9 @@ import ResizeKnob from "./components/ResizeKnob";
 import QueueItem from "./components/QueueItem";
 import Button from "./components/Button";
 
-const resizeFile = async (file: File) => {
+const resizeFile = async (file: File, type: "image/jpeg" | "image/png" | "image/webp") => {
     return await imageCompression(file, {
-        fileType: "image/webp",
+        fileType: type,
     })
         .then(compressedFile => {
             return compressedFile as File;
@@ -24,39 +24,53 @@ const resizeFile = async (file: File) => {
 
 const PlaceHolderImage: React.FC = () => {
     return (
-        <div className={styles.placeholder}>
-            <svg width="106" height="76" viewBox="0 0 106 76" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="1" width="45" height="36" fill="white" stroke="black" stroke-width="2" />
-                <rect x="55" y="14" width="25" height="23" fill="white" stroke="black" stroke-width="2" />
-                <rect x="15" y="46" width="45" height="23" fill="white" stroke="black" stroke-width="2" />
-                <rect
-                    x="32"
-                    y="26"
-                    width="55"
-                    height="29"
-                    fill="#3686FF"
-                    fill-opacity="0.24"
-                    stroke="#3687FF"
-                    stroke-width="2"
-                />
-                <path
-                    d="M89.9508 58.8906C89.8559 58.0256 90.8346 57.4605 91.5363 57.9752L103.094 66.4537C103.835 66.9967 103.513 68.1667 102.599 68.2553L96.7427 68.8238L93.3221 73.6116C92.7884 74.3586 91.6145 74.0519 91.5144 73.1394L89.9508 58.8906Z"
-                    fill="black"
-                />
-            </svg>
-            <span>Select things you want to export</span>
-        </div>
+        <section className={styles.placeholderWrap}>
+            <div className={styles.placeholder}>
+                <svg width="106" height="76" viewBox="0 0 106 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1" y="1" width="45" height="36" fill="white" stroke="black" strokeWidth="2" />
+                    <rect x="55" y="14" width="25" height="23" fill="white" stroke="black" strokeWidth="2" />
+                    <rect x="15" y="46" width="45" height="23" fill="white" stroke="black" strokeWidth="2" />
+                    <rect
+                        x="32"
+                        y="26"
+                        width="55"
+                        height="29"
+                        fill="#3686FF"
+                        fillOpacity="0.24"
+                        stroke="#3687FF"
+                        strokeWidth="2"
+                    />
+                    <path
+                        d="M89.9508 58.8906C89.8559 58.0256 90.8346 57.4605 91.5363 57.9752L103.094 66.4537C103.835 66.9967 103.513 68.1667 102.599 68.2553L96.7427 68.8238L93.3221 73.6116C92.7884 74.3586 91.6145 74.0519 91.5144 73.1394L89.9508 58.8906Z"
+                        fill="black"
+                    />
+                </svg>
+                <span>Select things you want to export</span>
+            </div>
+        </section>
     );
+};
+
+const selectFormat = (format: PluginFormatTypes) => {
+    switch (format) {
+        case "WEBP":
+            return "image/webp";
+        case "PNG":
+            return "image/png";
+        case "JPEG":
+            return "image/jpeg";
+    }
 };
 
 // Application
 const App = ({}) => {
     const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const formatTypes = ["WEBP", "PNG", "JPG"];
+    const formatTypes = ["WEBP", "PNG", "JPEG"];
 
     const [scaleRatio, setScaleRatio] = React.useState(scaleOptions[1]);
-    const [formatType, setFormatType] = React.useState(formatTypes[0]);
+    const [formatType, setFormatType] = React.useState(formatTypes[0] as PluginFormatTypes);
     const [quality, setQuality] = React.useState(80);
+    const [maxFileSize, setMaxFileSize] = React.useState("");
 
     const [imageDataArray, setImageDataArray] = React.useState([]);
 
@@ -90,21 +104,23 @@ const App = ({}) => {
             if (e.data.pluginMessage?.type === "exported-img-data") {
                 const exportedData = e.data.pluginMessage.exportedData;
 
+                console.log("UI", formatType);
+
                 const compresssedFiles = await Promise.all(
                     exportedData.map(async img => {
                         const blob = new Blob([img.data], {type: "image/png"}) as Blob;
                         const file = new File([blob], img.name, {type: "image/png"}) as File;
 
                         // console.log(await resizeFile(file));
-                        return (await resizeFile(file)) as File;
+                        return (await resizeFile(file, selectFormat(formatType))) as File;
                     }) as Array<File>
                 );
 
-                zipAndSave(compresssedFiles);
+                zipAndSave(compresssedFiles, formatType);
                 // console.log(compresssedFiles);
             }
         };
-    }, []);
+    }, [formatType, scaleRatio, quality, maxFileSize]);
 
     const addToQueue = () => {
         parent.postMessage({pluginMessage: {type: "add-to-queue"}}, "*");
@@ -128,6 +144,13 @@ const App = ({}) => {
         }
     };
 
+    const handleMaxFileSizeChange = value => {
+        // allow only numbers
+        if (value.match(/^[0-9]*$/)) {
+            setMaxFileSize(value);
+        }
+    };
+
     return (
         <>
             <section className={styles.wrap}>
@@ -140,7 +163,8 @@ const App = ({}) => {
                             options={formatTypes}
                             minWidth="90px"
                             onChange={value => {
-                                setFormatType(value);
+                                console.log(value);
+                                setFormatType(value as PluginFormatTypes);
                             }}
                         />
                         <Input
@@ -155,26 +179,37 @@ const App = ({}) => {
                             }}
                         />
                         <Input type="input" label="Quality:" value={`${quality}`} onChange={handleQalityChange} />
-                        <Input type="input" label="Max (kb):" value={`${quality}`} />
+                        <Input
+                            type="input"
+                            label="Max (kb):"
+                            value={`${maxFileSize}`}
+                            onChange={handleMaxFileSizeChange}
+                        />
                     </section>
 
                     <Button onClick={addToQueue} label="Add to queue" />
-                    {imageDataArray.length !== 0 ? <Button onClick={sendIds} label="Convert to WebP" /> : null}
                 </section>
 
                 <section className={styles.queueSection}>
-                    {imageDataArray.length === 0 ? <PlaceHolderImage /> : null}
-                    <section className={styles.queue}>
-                        {imageDataArray.map(imageData => {
-                            return (
-                                <QueueItem
-                                    key={imageData.id}
-                                    imageData={imageData}
-                                    onRemove={() => handleRemove(imageData.id)}
-                                />
-                            );
-                        })}
-                    </section>
+                    {imageDataArray.length === 0 ? (
+                        <PlaceHolderImage />
+                    ) : (
+                        <section className={styles.queue}>
+                            {imageDataArray.map(imageData => {
+                                return (
+                                    <QueueItem
+                                        key={imageData.id}
+                                        imageData={imageData}
+                                        onRemove={() => handleRemove(imageData.id)}
+                                    />
+                                );
+                            })}
+                        </section>
+                    )}
+
+                    {imageDataArray.length !== 0 ? (
+                        <Button onClick={sendIds} label="Convert" accent style={{marginTop: "20px"}} />
+                    ) : null}
                 </section>
             </section>
             <ResizeKnob />

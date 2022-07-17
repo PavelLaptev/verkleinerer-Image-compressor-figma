@@ -35,7 +35,14 @@ const Dropdown: React.FC<DropdownProps> = props => {
 };
 
 const TextInput: React.FC<TextInputProps> = props => {
-    return <input className={styles.input} value={props.value} onChange={e => props.onChange(e.target.value)} />;
+    return (
+        <input
+            className={styles.input}
+            value={props.value}
+            onChange={e => props.onChange(e.target.value)}
+            placeholder="—"
+        />
+    );
 };
 
 // Add parent class for sub-components

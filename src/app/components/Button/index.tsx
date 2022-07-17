@@ -5,12 +5,18 @@ interface Props {
     classname?: string;
     label: string;
     onClick: () => void;
+    accent?: boolean;
+    style?: React.CSSProperties;
 }
 
 // Add parent class for sub-components
 const Input: React.FC<Props> = props => {
     return (
-        <button onClick={props.onClick} className={styles.button}>
+        <button
+            onClick={props.onClick}
+            className={`${styles.button} ${props.accent ? styles.accent : ""}`}
+            style={{...props.style}}
+        >
             <span>{props.label}</span>
         </button>
     );

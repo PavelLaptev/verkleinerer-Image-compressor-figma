@@ -19,8 +19,12 @@
 }
 
 body {
-    overflow: hidden;
+    overflow-x: hidden;
     font-family: "Inter", sans-serif;
     font-size: 12px;
     margin: 0;
+
+    &::-webkit-scrollbar {
+        width: 0px;
+    }
 }

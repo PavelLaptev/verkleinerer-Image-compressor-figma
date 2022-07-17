@@ -13,15 +13,36 @@ const generateDateAndTime = () => {
     return `${year}-${month}-${day}T${hour}_${minute}_${second}`;
 };
 
-const download = (files: Array<File>) => {
+const download = (files: Array<File>, format: PluginFormatTypes) => {
+    console.log(format);
+
     var zip = new JSZip();
 
-    files.forEach(file => {
-        zip.file(`${file.name}.webp`, file);
+    const fileNames = files.map(file => file.name);
+
+    let count = 0;
+    let previousFileName = "";
+
+    const uniqueFileNames = fileNames.map(fileName => {
+        if (fileName === previousFileName) {
+            count++;
+        } else {
+            count = 0;
+        }
+
+        previousFileName = fileName;
+
+        return `${fileName}${count !== 0 ? `-${count}` : ""}`;
+    });
+
+    console.log(uniqueFileNames);
+
+    files.forEach((file, index) => {
+        zip.file(`tinify-${generateDateAndTime()}/${uniqueFileNames[index]}.${format.toLowerCase()}`, file);
     });
 
     zip.generateAsync({type: "blob"}).then(content => {
-        saveAs(content, `tinify-${generateDateAndTime()}.zip`);
+        saveAs(content, `tinify-${generateDateAndTime()}.zip`, {binary: true});
     });
 };
 

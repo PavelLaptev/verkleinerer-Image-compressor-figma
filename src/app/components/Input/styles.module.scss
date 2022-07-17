@@ -2,11 +2,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-right: 10px;
-
-    &:last-child {
-        margin-right: 0;
-    }
 
     select {
         appearance: none;
@@ -43,4 +38,8 @@
     border-radius: var(--border-radius);
     outline: none;
     padding: 10px;
+
+    &::placeholder {
+        opacity: 0.4;
+    }
 }
