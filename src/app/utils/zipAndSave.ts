@@ -13,8 +13,8 @@ const generateDateAndTime = () => {
     return `${year}-${month}-${day}T${hour}_${minute}_${second}`;
 };
 
-const download = (files: Array<File>, format: PluginFormatTypes) => {
-    console.log(format);
+const download = (files: Array<File>, format: PluginFormatTypes, scale: number, setScale: boolean) => {
+    console.log(scale, setScale);
 
     var zip = new JSZip();
 
@@ -38,7 +38,12 @@ const download = (files: Array<File>, format: PluginFormatTypes) => {
     console.log(uniqueFileNames);
 
     files.forEach((file, index) => {
-        zip.file(`tinify-${generateDateAndTime()}/${uniqueFileNames[index]}.${format.toLowerCase()}`, file);
+        zip.file(
+            `tinify-${generateDateAndTime()}/${uniqueFileNames[index]}${
+                setScale ? `@${scale}x` : ""
+            }.${format.toLowerCase()}`,
+            file
+        );
     });
 
     zip.generateAsync({type: "blob"}).then(content => {

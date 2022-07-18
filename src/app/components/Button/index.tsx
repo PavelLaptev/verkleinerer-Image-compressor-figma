@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./styles.module.scss";
 
 interface Props {
-    classname?: string;
+    className?: string;
     label: string;
     onClick: () => void;
     accent?: boolean;
@@ -23,7 +23,7 @@ const Input: React.FC<Props> = props => {
 };
 
 Input.defaultProps = {
-    classname: "",
+    className: "",
     label: "Button",
 };
 

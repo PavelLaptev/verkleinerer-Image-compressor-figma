@@ -9,6 +9,7 @@ import Input from "./components/Input";
 import ResizeKnob from "./components/ResizeKnob";
 import QueueItem from "./components/QueueItem";
 import Button from "./components/Button";
+import Checkbox from "./components/Checkbox";
 
 const resizeFile = async (file: File, type: "image/jpeg" | "image/png" | "image/webp") => {
     return await imageCompression(file, {
@@ -71,6 +72,7 @@ const App = ({}) => {
     const [formatType, setFormatType] = React.useState(formatTypes[0] as PluginFormatTypes);
     const [quality, setQuality] = React.useState(80);
     const [maxFileSize, setMaxFileSize] = React.useState("");
+    const [addScaleSuffix, setAddScaleSuffix] = React.useState(false);
 
     const [imageDataArray, setImageDataArray] = React.useState([]);
 
@@ -116,11 +118,11 @@ const App = ({}) => {
                     }) as Array<File>
                 );
 
-                zipAndSave(compresssedFiles, formatType);
+                zipAndSave(compresssedFiles, formatType, scaleRatio, addScaleSuffix);
                 // console.log(compresssedFiles);
             }
         };
-    }, [formatType, scaleRatio, quality, maxFileSize]);
+    }, [formatType, scaleRatio, quality, maxFileSize, addScaleSuffix]);
 
     const addToQueue = () => {
         parent.postMessage({pluginMessage: {type: "add-to-queue"}}, "*");
@@ -186,6 +188,8 @@ const App = ({}) => {
                             onChange={handleMaxFileSizeChange}
                         />
                     </section>
+
+                    <Checkbox label="Add scale suffix" onChange={val => setAddScaleSuffix(val)} />
 
                     <Button onClick={addToQueue} label="Add to queue" />
                 </section>
