@@ -14,7 +14,7 @@ const generateDateAndTime = () => {
 };
 
 const download = (files: Array<File>, format: PluginFormatTypes, scale: number, setScale: boolean) => {
-    console.log(scale, setScale);
+    // console.log(scale, setScale);
 
     var zip = new JSZip();
 
@@ -35,7 +35,7 @@ const download = (files: Array<File>, format: PluginFormatTypes, scale: number, 
         return `${fileName}${count !== 0 ? `-${count}` : ""}`;
     });
 
-    console.log(uniqueFileNames);
+    console.log(files);
 
     files.forEach((file, index) => {
         zip.file(

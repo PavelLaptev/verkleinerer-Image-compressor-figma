@@ -11,12 +11,15 @@
 
     &:before {
         z-index: 99;
-        content: '';
+        content: "";
         position: absolute;
-        top: 4px;
+        top: -4px;
         right: 7px;
-        border-style: solid;
-        border-width: 0 0 8px 8px;
-        border-color: transparent transparent var(--clr-black) transparent;
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 10px solid var(--main-color);
+        transform: rotate(45deg);
     }
 }

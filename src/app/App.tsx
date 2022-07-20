@@ -11,9 +11,19 @@ import QueueItem from "./components/QueueItem";
 import Button from "./components/Button";
 import Checkbox from "./components/Checkbox";
 
-const resizeFile = async (file: File, type: "image/jpeg" | "image/png" | "image/webp") => {
+const resizeFile = async (
+    file: File,
+    type: "image/jpeg" | "image/png" | "image/webp",
+    maxFileSize: string,
+    quality: number,
+    iterations: number
+) => {
     return await imageCompression(file, {
         fileType: type,
+        maxSizeMB: parseFloat(maxFileSize),
+        alwaysKeepResolution: true,
+        initialQuality: quality * 0.01,
+        maxIteration: iterations,
     })
         .then(compressedFile => {
             return compressedFile as File;
@@ -70,8 +80,9 @@ const App = ({}) => {
 
     const [scaleRatio, setScaleRatio] = React.useState(scaleOptions[1]);
     const [formatType, setFormatType] = React.useState(formatTypes[0] as PluginFormatTypes);
-    const [quality, setQuality] = React.useState(80);
-    const [maxFileSize, setMaxFileSize] = React.useState("");
+    const [quality, setQuality] = React.useState(80 as any);
+    const [maxFileSize, setMaxFileSize] = React.useState(1 as any);
+    const [iterations, setIterations] = React.useState(30 as any);
     const [addScaleSuffix, setAddScaleSuffix] = React.useState(false);
 
     const [imageDataArray, setImageDataArray] = React.useState([]);
@@ -106,7 +117,7 @@ const App = ({}) => {
             if (e.data.pluginMessage?.type === "exported-img-data") {
                 const exportedData = e.data.pluginMessage.exportedData;
 
-                console.log("UI", formatType);
+                // console.log("UI", formatType);
 
                 const compresssedFiles = await Promise.all(
                     exportedData.map(async img => {
@@ -114,7 +125,13 @@ const App = ({}) => {
                         const file = new File([blob], img.name, {type: "image/png"}) as File;
 
                         // console.log(await resizeFile(file));
-                        return (await resizeFile(file, selectFormat(formatType))) as File;
+                        return (await resizeFile(
+                            file,
+                            selectFormat(formatType),
+                            maxFileSize,
+                            quality,
+                            iterations
+                        )) as File;
                     }) as Array<File>
                 );
 
@@ -139,17 +156,44 @@ const App = ({}) => {
         );
     };
 
-    const handleQalityChange = value => {
+    const handleQalityChange = (value: string) => {
         // allow only numbers
         if (value.match(/^[0-9]*$/)) {
-            setQuality(value);
+            const valNumber = Number(value);
+
+            if (valNumber < 101) {
+                setQuality(valNumber);
+            }
+        }
+
+        if (value === "") {
+            setQuality("");
         }
     };
 
-    const handleMaxFileSizeChange = value => {
+    const handleMaxFileSizeChange = (value: string) => {
+        // allow only numbers
+        if (value.match(/^[0-9]*\.?[0-9]*$/)) {
+            setMaxFileSize(value);
+        }
+
+        if (value === "") {
+            setMaxFileSize("");
+        }
+    };
+
+    const handleIterationsChange = (value: string) => {
         // allow only numbers
         if (value.match(/^[0-9]*$/)) {
-            setMaxFileSize(value);
+            const valNumber = Number(value);
+
+            if (valNumber < 1001) {
+                setIterations(valNumber);
+            }
+        }
+
+        if (value === "") {
+            setIterations("");
         }
     };
 
@@ -176,20 +220,26 @@ const App = ({}) => {
                             options={scaleOptions.map(item => `@${item}x`)}
                             minWidth="90px"
                             onChange={value => {
-                                const ratio = Number(value.replace(/[@x]/g, ""));
+                                const ratio = parseFloat(value.replace(/[@x]/g, ""));
                                 setScaleRatio(ratio);
                             }}
                         />
                         <Input type="input" label="Quality:" value={`${quality}`} onChange={handleQalityChange} />
                         <Input
                             type="input"
-                            label="Max (kb):"
+                            label="Max (MB):"
                             value={`${maxFileSize}`}
                             onChange={handleMaxFileSizeChange}
                         />
+                        <Input
+                            type="input"
+                            label="iterations:"
+                            value={`${iterations}`}
+                            onChange={handleIterationsChange}
+                        />
                     </section>
 
-                    <Checkbox label="Add scale suffix" onChange={val => setAddScaleSuffix(val)} />
+                    <Checkbox label="Add a scale suffix to the filename" onChange={val => setAddScaleSuffix(val)} />
 
                     <Button onClick={addToQueue} label="Add to queue" />
                 </section>

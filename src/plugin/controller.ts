@@ -5,7 +5,7 @@ figma.skipInvisibleInstanceChildren = true;
 // Show UI
 
 const pluginFrameSize = {
-    width: 400,
+    width: 460,
     height: 440,
 };
 

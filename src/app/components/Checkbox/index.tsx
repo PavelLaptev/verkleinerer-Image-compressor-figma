@@ -20,8 +20,16 @@ const Checkbox: React.FC<Props> = props => {
 
     return (
         <div className={`${styles.wrap} ${props.className}`}>
-            <input type="checkbox" checked={checked} onChange={handleChange} />
-            <label>{props.label}</label>
+            <input
+                id={props.label}
+                className={styles.checkbox}
+                type="checkbox"
+                checked={checked}
+                onChange={handleChange}
+            />
+            <label htmlFor={props.label} className={styles.label}>
+                {props.label}
+            </label>
         </div>
     );
 };
