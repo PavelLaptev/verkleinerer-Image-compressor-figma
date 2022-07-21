@@ -24,6 +24,9 @@ const resizeFile = async (
         alwaysKeepResolution: true,
         initialQuality: quality * 0.01,
         maxIteration: iterations,
+        onProgress: (data: any) => {
+            console.log(data);
+        },
     })
         .then(compressedFile => {
             return compressedFile as File;
@@ -78,10 +81,12 @@ const App = ({}) => {
     const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const formatTypes = ["WEBP", "PNG", "JPEG"];
 
+    const [showAdvanced, setShowAdvanced] = React.useState(false);
+
     const [scaleRatio, setScaleRatio] = React.useState(scaleOptions[1]);
     const [formatType, setFormatType] = React.useState(formatTypes[0] as PluginFormatTypes);
     const [quality, setQuality] = React.useState(80 as any);
-    const [maxFileSize, setMaxFileSize] = React.useState(1 as any);
+    const [maxFileSize, setMaxFileSize] = React.useState(10 as any);
     const [iterations, setIterations] = React.useState(30 as any);
     const [addScaleSuffix, setAddScaleSuffix] = React.useState(false);
 
@@ -225,23 +230,50 @@ const App = ({}) => {
                             }}
                         />
                         <Input type="input" label="Quality:" value={`${quality}`} onChange={handleQalityChange} />
-                        <Input
-                            type="input"
-                            label="Max (MB):"
-                            value={`${maxFileSize}`}
-                            onChange={handleMaxFileSizeChange}
-                        />
-                        <Input
-                            type="input"
-                            label="iterations:"
-                            value={`${iterations}`}
-                            onChange={handleIterationsChange}
-                        />
                     </section>
 
-                    <Checkbox label="Add a scale suffix to the filename" onChange={val => setAddScaleSuffix(val)} />
+                    <section className={styles.advancedWrap}>
+                        <section className={styles.advancedTogglerWrap} onClick={() => setShowAdvanced(!showAdvanced)}>
+                            <svg
+                                width="42"
+                                height="24"
+                                viewBox="0 0 42 24"
+                                className={styles.advancedTogglerButton}
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <rect width="42" height="24" />
+                                <path d="M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" />
+                                <path d="M23 12C23 13.1046 22.1046 14 21 14C19.8954 14 19 13.1046 19 12C19 10.8954 19.8954 10 21 10C22.1046 10 23 10.8954 23 12Z" />
+                                <path d="M32 12C32 13.1046 31.1046 14 30 14C28.8954 14 28 13.1046 28 12C28 10.8954 28.8954 10 30 10C31.1046 10 32 10.8954 32 12Z" />
+                            </svg>
+                        </section>
 
-                    <Button onClick={addToQueue} label="Add to queue" />
+                        <section
+                            className={styles.advancedControls}
+                            style={{
+                                display: showAdvanced ? "flex" : "none",
+                            }}
+                        >
+                            <section className={`${styles.inputs} ${styles.advancedInputs}`}>
+                                <Input
+                                    type="input"
+                                    label="Max (MB):"
+                                    value={`${maxFileSize}`}
+                                    onChange={handleMaxFileSizeChange}
+                                />
+                                <Input
+                                    type="input"
+                                    label="iterations:"
+                                    value={`${iterations}`}
+                                    onChange={handleIterationsChange}
+                                />
+                            </section>
+                            <Checkbox
+                                label="Add a scale suffix to the filename"
+                                onChange={val => setAddScaleSuffix(val)}
+                            />
+                        </section>
+                    </section>
                 </section>
 
                 <section className={styles.queueSection}>
@@ -261,9 +293,13 @@ const App = ({}) => {
                         </section>
                     )}
 
-                    {imageDataArray.length !== 0 ? (
-                        <Button onClick={sendIds} label="Convert" accent style={{marginTop: "20px"}} />
-                    ) : null}
+                    <section className={styles.controlButtons}>
+                        <Button onClick={addToQueue} className={styles.button} label="Add to queue" />
+
+                        {imageDataArray.length !== 0 ? (
+                            <Button className={styles.button} onClick={sendIds} label="Convert" accent />
+                        ) : null}
+                    </section>
                 </section>
             </section>
             <ResizeKnob />

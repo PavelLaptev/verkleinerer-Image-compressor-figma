@@ -14,7 +14,7 @@ const Input: React.FC<Props> = props => {
     return (
         <button
             onClick={props.onClick}
-            className={`${styles.button} ${props.accent ? styles.accent : ""}`}
+            className={`${styles.button} ${props.accent ? styles.accent : ""} ${props.className || ""}`}
             style={{...props.style}}
         >
             <span>{props.label}</span>
