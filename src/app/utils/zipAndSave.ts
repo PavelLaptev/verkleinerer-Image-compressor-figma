@@ -35,7 +35,7 @@ const download = (files: Array<File>, format: PluginFormatTypes, scale: number, 
         return `${fileName}${count !== 0 ? `-${count}` : ""}`;
     });
 
-    console.log(files);
+    // console.log(files);
 
     files.forEach((file, index) => {
         zip.file(

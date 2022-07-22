@@ -24,9 +24,6 @@ const resizeFile = async (
         alwaysKeepResolution: true,
         initialQuality: quality * 0.01,
         maxIteration: iterations,
-        onProgress: (data: any) => {
-            console.log(data);
-        },
     })
         .then(compressedFile => {
             return compressedFile as File;
@@ -214,7 +211,7 @@ const App = ({}) => {
                             options={formatTypes}
                             minWidth="90px"
                             onChange={value => {
-                                console.log(value);
+                                // console.log(value);
                                 setFormatType(value as PluginFormatTypes);
                             }}
                         />
