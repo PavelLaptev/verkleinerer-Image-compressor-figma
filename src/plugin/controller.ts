@@ -34,8 +34,8 @@ figma.ui.onmessage = async msg => {
                                 id: item.id,
                                 name: item.name,
                                 size: {
-                                    width: item.width,
-                                    height: item.height,
+                                    width: Math.round(item.width),
+                                    height: Math.round(item.height),
                                 },
                                 preview: figma.base64Encode(data),
                             },
