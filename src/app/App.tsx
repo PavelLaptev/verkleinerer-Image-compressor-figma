@@ -33,6 +33,17 @@ const resizeFile = async (
         });
 };
 
+const useEffectAfterMount = (cb, dependencies) => {
+    const mounted = React.useRef(true);
+
+    React.useEffect(() => {
+        if (!mounted.current) {
+            return cb();
+        }
+        mounted.current = false;
+    }, dependencies); // eslint-disable-line react-hooks/exhaustive-deps
+};
+
 const PlaceHolderImage: React.FC = () => {
     return (
         <section className={styles.placeholderWrap}>
@@ -93,7 +104,9 @@ const App = ({}) => {
 
     React.useEffect(() => {
         onmessage = async e => {
-            if (e.data.pluginMessage?.type === "imageData") {
+            const message = e.data.pluginMessage;
+
+            if (message?.type === "imageData") {
                 // console.log(imageData, e.data.pluginMessage.imageData.id);
                 // console.log(imageData);
 
@@ -118,7 +131,7 @@ const App = ({}) => {
                 //
             }
 
-            if (e.data.pluginMessage?.type === "exported-img-data") {
+            if (message?.type === "exported-img-data") {
                 const exportedData = e.data.pluginMessage.exportedData;
 
                 // console.log("UI", formatType);
@@ -145,6 +158,45 @@ const App = ({}) => {
             }
         };
     }, [formatType, scaleRatio, quality, maxFileSize, addScaleSuffix]);
+
+    useEffectAfterMount(() => {
+        // send plugin settings to the plugin
+        parent.postMessage(
+            {
+                pluginMessage: {
+                    type: "settings",
+                    settings: {
+                        scaleRatio: scaleRatio,
+                        formatType: formatType,
+                        quality: quality,
+                        maxFileSize: maxFileSize,
+                        iterations: iterations,
+                        addScaleSuffix: addScaleSuffix,
+                    },
+                },
+            },
+            "*"
+        );
+    }, [scaleRatio, formatType, quality, maxFileSize, iterations, addScaleSuffix]);
+
+    React.useEffect(() => {
+        parent.postMessage({pluginMessage: {type: "get-settings"}}, "*");
+
+        onmessage = async e => {
+            const message = e.data.pluginMessage;
+            console.log("get storage", message);
+            if (message?.type === "settings") {
+                const settings = message.settings;
+
+                setScaleRatio(settings.scaleRatio);
+                setFormatType(settings.formatType);
+                setQuality(settings.quality);
+                setMaxFileSize(settings.maxFileSize);
+                setIterations(settings.iterations);
+                setAddScaleSuffix(settings.addScaleSuffix);
+            }
+        };
+    }, []);
 
     const addToQueue = () => {
         parent.postMessage({pluginMessage: {type: "add-to-queue"}}, "*");
