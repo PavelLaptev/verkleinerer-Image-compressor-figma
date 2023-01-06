@@ -1,5 +1,28 @@
 console.clear();
 
+// const pluginName = "tinifyPlugin";
+
+// const setStorage = storageValue => {
+//     figma.clientStorage.setAsync(pluginName, JSON.stringify(storageValue)).catch(err => {
+//         console.error(err);
+//         figma.notify(err, {
+//             timeout: 2000,
+//         });
+//     });
+// };
+
+// const getStorage = () => {
+//     return figma.clientStorage.getAsync(pluginName).then(storageValue => {
+//         if (storageValue) {
+//             return JSON.parse(storageValue);
+//         } else {
+//             return {
+//                 queue: [],
+//             };
+//         }
+//     });
+// };
+
 figma.skipInvisibleInstanceChildren = true;
 
 // Show UI
@@ -15,8 +38,6 @@ figma.ui.onmessage = async msg => {
     if (msg.type === "add-to-queue") {
         if (figma.currentPage.selection.length > 0) {
             const selection = figma.currentPage.selection;
-
-            // console.log(selection);
 
             selection.map(async item => {
                 return await item

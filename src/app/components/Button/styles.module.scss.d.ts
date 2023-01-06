@@ -4,6 +4,7 @@ interface CssExports {
   'accent': string;
   'button': string;
   'loading-shimmer': string;
+  'outline': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

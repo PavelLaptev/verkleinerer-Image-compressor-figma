@@ -9,11 +9,13 @@ interface CssExports {
   'button': string;
   'checkboxGroup': string;
   'controlButtons': string;
+  'controlGroups': string;
   'inputs': string;
   'placeholder': string;
   'placeholderWrap': string;
   'queue': string;
   'queueSection': string;
+  'removeAllButton': string;
   'settings': string;
   'wrap': string;
 }

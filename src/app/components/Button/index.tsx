@@ -6,16 +6,27 @@ interface Props {
     label: string;
     onClick: () => void;
     accent?: boolean;
+    outline?: boolean;
     disabled?: boolean;
     style?: React.CSSProperties;
 }
 
 // Add parent class for sub-components
 const Input: React.FC<Props> = props => {
+    const passButtonMode = () => {
+        if (props.accent) {
+            return styles.accent;
+        }
+        if (props.outline) {
+            return styles.outline;
+        }
+        return "";
+    };
+
     return (
         <button
             onClick={props.onClick}
-            className={`${styles.button} ${props.accent ? styles.accent : ""} ${props.className || ""}`}
+            className={`${styles.button} ${passButtonMode()} ${props.className || ""}`}
             disabled={props.disabled}
             style={{...props.style}}
         >

@@ -1,11 +1,11 @@
 {
     "name": "figma-webp-plugin",
-    "version": "0.1.2",
+    "version": "1.0.0",
     "description": "",
     "license": "ISC",
     "scripts": {
         "build": "/usr/local/bin/node node_modules/.bin/webpack --mode=production",
-        "build:watch": "/usr/local/bin/node node_modules/.bin/webpack --mode=development --watch",
+        "build:watch": "NODE_OPTIONS=--openssl-legacy-provider /usr/local/bin/node node_modules/.bin/webpack --mode=development --watch",
         "prettier:format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' "
     },
     "dependencies": {

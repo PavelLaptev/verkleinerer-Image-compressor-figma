@@ -204,6 +204,10 @@ const App = ({}) => {
         }
     };
 
+    const clearQueue = () => {
+        setImageDataArray([]);
+    };
+
     return (
         <>
             <section className={styles.wrap}>
@@ -298,8 +302,18 @@ const App = ({}) => {
                         </section>
                     )}
 
-                    <section className={styles.controlButtons}>
-                        <Button onClick={addToQueue} className={styles.button} label="Add to queue" />
+                    <section className={styles.controlGroups}>
+                        <section className={styles.controlButtons}>
+                            <Button onClick={addToQueue} className={styles.button} label="Add to queue" />
+                            {imageDataArray.length > 1 ? (
+                                <Button
+                                    onClick={clearQueue}
+                                    className={styles.removeAllButton}
+                                    label="Clear all"
+                                    outline
+                                />
+                            ) : null}
+                        </section>
 
                         {imageDataArray.length !== 0 ? (
                             <Button
