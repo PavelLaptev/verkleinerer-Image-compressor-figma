@@ -3,6 +3,7 @@
 interface CssExports {
   'accent': string;
   'button': string;
+  'loading-shimmer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -35,7 +35,7 @@ const download = (files: Array<File>, format: PluginFormatTypes, scale: number, 
         return `${fileName}${count !== 0 ? `-${count}` : ""}`;
     });
 
-    // console.log(files);
+    console.log(files);
 
     files.forEach((file, index) => {
         zip.file(
@@ -46,9 +46,15 @@ const download = (files: Array<File>, format: PluginFormatTypes, scale: number, 
         );
     });
 
-    zip.generateAsync({type: "blob"}).then(content => {
-        saveAs(content, `tinify-${generateDateAndTime()}.zip`, {binary: true});
-    });
+    if (files.length > 1) {
+        zip.generateAsync({type: "blob"}).then(content => {
+            saveAs(content, `tinify-${generateDateAndTime()}.zip`, {binary: true});
+        });
+    } else {
+        saveAs(files[0], `${uniqueFileNames[0]}${setScale ? `@${scale}x` : ""}.${format.toLowerCase()}`, {
+            binary: true,
+        });
+    }
 };
 
 export default download;

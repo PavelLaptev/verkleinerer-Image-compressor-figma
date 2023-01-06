@@ -11,6 +11,7 @@ interface Props {
             height: number;
         };
     };
+    scaleRatio: number;
     onRemove: () => void;
 }
 
@@ -29,7 +30,8 @@ const QueueItem: React.FC<Props> = props => {
             <div className={styles.content}>
                 <span className={styles.title}>{props.imageData.name}</span>
                 <span className={styles.caption}>
-                    {props.imageData.size.width}x{props.imageData.size.height}px
+                    @1x: {props.imageData.size.width}x{props.imageData.size.height}px → @{props.scaleRatio}x:{" "}
+                    {props.imageData.size.width * props.scaleRatio}x{props.imageData.size.height * props.scaleRatio}px
                 </span>
             </div>
 

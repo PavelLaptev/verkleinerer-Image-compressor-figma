@@ -1,7 +1,7 @@
 .wrap {
     position: relative;
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     select {
         appearance: none;
@@ -16,6 +16,10 @@
         &::-ms-expand {
             display: none;
         }
+    }
+
+    &:last-child {
+        margin-bottom: 10px;
     }
 }
 

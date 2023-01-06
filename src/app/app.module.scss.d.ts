@@ -7,6 +7,7 @@ interface CssExports {
   'advancedTogglerWrap': string;
   'advancedWrap': string;
   'button': string;
+  'checkboxGroup': string;
   'controlButtons': string;
   'inputs': string;
   'placeholder': string;

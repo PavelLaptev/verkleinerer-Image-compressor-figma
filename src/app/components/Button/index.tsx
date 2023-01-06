@@ -6,6 +6,7 @@ interface Props {
     label: string;
     onClick: () => void;
     accent?: boolean;
+    disabled?: boolean;
     style?: React.CSSProperties;
 }
 
@@ -15,6 +16,7 @@ const Input: React.FC<Props> = props => {
         <button
             onClick={props.onClick}
             className={`${styles.button} ${props.accent ? styles.accent : ""} ${props.className || ""}`}
+            disabled={props.disabled}
             style={{...props.style}}
         >
             <span>{props.label}</span>
@@ -25,6 +27,7 @@ const Input: React.FC<Props> = props => {
 Input.defaultProps = {
     className: "",
     label: "Button",
+    disabled: false,
 };
 
 export default Input;

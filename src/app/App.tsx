@@ -87,6 +87,8 @@ const App = ({}) => {
     const [iterations, setIterations] = React.useState(30 as any);
     const [addScaleSuffix, setAddScaleSuffix] = React.useState(false);
 
+    const [isDataLoading, setIsDataLoading] = React.useState(false);
+
     const [imageDataArray, setImageDataArray] = React.useState([]);
 
     React.useEffect(() => {
@@ -139,6 +141,7 @@ const App = ({}) => {
 
                 zipAndSave(compresssedFiles, formatType, scaleRatio, addScaleSuffix);
                 // console.log(compresssedFiles);
+                setIsDataLoading(false);
             }
         };
     }, [formatType, scaleRatio, quality, maxFileSize, addScaleSuffix]);
@@ -152,6 +155,8 @@ const App = ({}) => {
     };
 
     const sendIds = () => {
+        setIsDataLoading(true);
+
         parent.postMessage(
             {pluginMessage: {type: "send-ids", scaleRatio: scaleRatio, ids: imageDataArray.map(item => item.id)}},
             "*"
@@ -265,10 +270,12 @@ const App = ({}) => {
                                     onChange={handleIterationsChange}
                                 />
                             </section>
-                            <Checkbox
-                                label="Add a scale suffix to the filename"
-                                onChange={val => setAddScaleSuffix(val)}
-                            />
+                            <section className={styles.checkboxGroup}>
+                                <Checkbox
+                                    label="Add a scale suffix to the filename"
+                                    onChange={val => setAddScaleSuffix(val)}
+                                />
+                            </section>
                         </section>
                     </section>
                 </section>
@@ -283,6 +290,7 @@ const App = ({}) => {
                                     <QueueItem
                                         key={imageData.id}
                                         imageData={imageData}
+                                        scaleRatio={scaleRatio}
                                         onRemove={() => handleRemove(imageData.id)}
                                     />
                                 );
@@ -294,7 +302,13 @@ const App = ({}) => {
                         <Button onClick={addToQueue} className={styles.button} label="Add to queue" />
 
                         {imageDataArray.length !== 0 ? (
-                            <Button className={styles.button} onClick={sendIds} label="Convert" accent />
+                            <Button
+                                className={styles.button}
+                                onClick={sendIds}
+                                label={!isDataLoading ? "Convert" : "Working…"}
+                                disabled={isDataLoading}
+                                accent
+                            />
                         ) : null}
                     </section>
                 </section>

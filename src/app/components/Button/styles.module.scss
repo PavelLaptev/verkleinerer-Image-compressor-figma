@@ -13,8 +13,33 @@
         font-size: 16px;
         font-weight: 700;
     }
+
+    &:disabled {
+        background-color: var(--light-color);
+        cursor: not-allowed;
+        animation: loading-shimmer 1s infinite;
+
+        span {
+            color: var(--main-color);
+            opacity: 0.3;
+        }
+    }
 }
 
 .accent {
     background-color: var(--accent-color);
+}
+
+@keyframes loading-shimmer {
+    0% {
+        background-color: var(--light-color);
+    }
+
+    50% {
+        background-color: var(--light-hover-color);
+    }
+
+    100% {
+        background-color: var(--light-color);
+    }
 }
