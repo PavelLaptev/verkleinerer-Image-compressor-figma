@@ -1,31 +1,31 @@
 @import "./font-face";
 
 :root {
-    --main-color: #000;
-    --accent-color: #7785ff;
-    --light-hover-color: #e4e4ed;
-    --light-color: #f6f6fc;
-    --white-color: #fff;
+  --main-color: #000;
+  --accent-color: #7785ff;
+  --light-hover-color: #e4e4ed;
+  --light-color: #f6f6fc;
+  --white-color: #fff;
 
-    --border-radius: 0;
+  --border-radius: 0;
 }
 
 *,
 *:before,
 *:after {
-    box-sizing: border-box;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    overflow-x: hidden;
-    font-family: "Inter", sans-serif;
-    font-size: 12px;
-    margin: 0;
+  overflow-x: hidden;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  margin: 0;
 
-    &::-webkit-scrollbar {
-        width: 0px;
-    }
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
 }

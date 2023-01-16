@@ -29,3 +29,11 @@ If you like what I do, you can support me by donating.
 ---
 
 Any question please leave in the Issues or send me directly at [pawellaptew@gmail.com](mailto:pawellaptew@gmail.com)
+
+---
+
+### Changelog
+
+#### 1.1.0
+
+- Updated all dependencies

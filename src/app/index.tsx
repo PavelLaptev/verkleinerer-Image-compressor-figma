@@ -1,6 +1,10 @@
-import * as React from 'react';
-import {createRoot} from 'react-dom/client';
-import './styles/ui.scss';
-import App from './App';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import "./styles/ui.scss";
+import App from "./App";
 
-createRoot(document.getElementById('react-page')).render(<App />);
+document.addEventListener("DOMContentLoaded", function () {
+  const container = document.getElementById("react-page");
+  const root = createRoot(container);
+  root.render(<App />);
+});
