@@ -37,3 +37,11 @@ Any question please leave in the Issues or send me directly at [pawellaptew@gmai
 #### 1.1.0
 
 - Updated all dependencies
+
+#### 1.2.0
+
+- Reformat code, fixed client storage bug
+
+#### 1.3.0
+
+- Added scales `0.5x`, `0.75x`, `1.5x`, `2.5x`

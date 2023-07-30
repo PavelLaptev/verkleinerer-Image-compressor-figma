@@ -116,12 +116,12 @@ const selectFormat = (format: PluginFormatTypes) => {
 
 // Application
 const App = ({}) => {
-  const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const scaleOptions = [0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10];
   const formatTypes = ["WEBP", "PNG", "JPEG"];
 
   const [showAdvanced, setShowAdvanced] = React.useState(false);
 
-  const [scaleRatio, setScaleRatio] = React.useState(scaleOptions[1]);
+  const [scaleRatio, setScaleRatio] = React.useState(scaleOptions[3]);
   const [formatType, setFormatType] = React.useState(
     formatTypes[0] as PluginFormatTypes
   );
