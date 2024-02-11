@@ -4,7 +4,7 @@
 
 Tinify your images.
 
-You can choose the iterations level, quality, maximum file size and the format `WEBP`, `JPEG` or `PNG`.
+You can choose the iterations level, quality, maximum file size and the format `WEBP`, `JPEG`, `JPG` or `PNG`.
 
 👉 [Install the plugin](https://www.figma.com/community/plugin/1127372261563355491)
 

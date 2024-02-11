@@ -10,4 +10,4 @@ declare module "*.jpeg";
 declare module "*.webp";
 declare module "*.svg";
 
-type PluginFormatTypes = "WEBP" | "PNG" | "JPEG";
+type PluginFormatTypes = "WEBP" | "PNG" | "JPEG" | "JPG";

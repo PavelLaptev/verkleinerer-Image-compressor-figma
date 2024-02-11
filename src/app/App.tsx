@@ -111,13 +111,15 @@ const selectFormat = (format: PluginFormatTypes) => {
       return "image/png";
     case "JPEG":
       return "image/jpeg";
+    case "JPG":
+      return "image/jpeg";
   }
 };
 
 // Application
 const App = ({}) => {
   const scaleOptions = [0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10];
-  const formatTypes = ["WEBP", "PNG", "JPEG"];
+  const formatTypes = ["WEBP", "PNG", "JPG", "JPEG"] as PluginFormatTypes[];
 
   const [showAdvanced, setShowAdvanced] = React.useState(false);
 
@@ -135,7 +137,7 @@ const App = ({}) => {
   const [imageDataArray, setImageDataArray] = React.useState([]);
 
   React.useEffect(() => {
-    console.log("imageDataArray", imageDataArray);
+    // console.log("imageDataArray", imageDataArray);
     onmessage = async (e) => {
       const message = e.data.pluginMessage;
 
