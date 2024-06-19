@@ -1,4 +1,4 @@
-# Tinify 🗜️ Image compressor
+# Verkleinerer — Image Compressor
 
 ![Plugin preview](preview.webp)
 
