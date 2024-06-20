@@ -1,4 +1,4 @@
-# Verkleinerer — Image Compressor
+# Image Compressor
 
 ![Plugin preview](preview.webp)
 
