@@ -96,8 +96,8 @@ figma.ui.onmessage = async (msg) => {
   // RECIVE SELECTED NODES IDS FROM UI
   if (msg.type === "send-ids") {
     const selecteditems = msg.ids.map((id) => {
-      return figma.getNodeById(id);
-    });
+      return figma.currentPage.findOne(node => node.id === id);
+    }).filter(node => node !== null);
 
     // console.log(selecteditems);
 
