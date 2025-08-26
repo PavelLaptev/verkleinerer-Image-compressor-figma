@@ -50,7 +50,7 @@ const download = (
   };
 
   files.forEach((file, index) => {
-    zip.file(generateFileName(index), file);
+    zip.file(generateFileName(index), file, { date: new Date() });
   });
 
   if (files.length > 1) {
