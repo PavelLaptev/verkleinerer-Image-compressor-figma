@@ -3,17 +3,12 @@ import JSZip from "jszip";
 
 const generateDateAndTime = () => {
   const date = new Date();
-  // Get local timezone offset in minutes
-  const timezoneOffset = date.getTimezoneOffset();
-  // Adjust for timezone offset to get local time
-  const localDate = new Date(date.getTime() - (timezoneOffset * 60000));
-  
-  const year = localDate.getFullYear();
-  const month = String(localDate.getMonth() + 1).padStart(2, '0');
-  const day = String(localDate.getDate()).padStart(2, '0');
-  const hour = String(localDate.getHours()).padStart(2, '0');
-  const minute = String(localDate.getMinutes()).padStart(2, '0');
-  const second = String(localDate.getSeconds()).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const second = date.getSeconds();
 
   return `${year}-${month}-${day}T${hour}_${minute}_${second}`;
 };
