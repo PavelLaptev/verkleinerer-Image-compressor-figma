@@ -178,6 +178,7 @@ const App = ({}) => {
             const blob = new Blob([img.data], { type: "image/png" }) as Blob;
             const file = new File([blob], img.name, {
               type: "image/png",
+              lastModified: Date.now(),
             }) as File;
 
             // console.log(await resizeFile(file));
