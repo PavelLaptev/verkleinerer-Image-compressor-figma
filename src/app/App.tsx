@@ -26,7 +26,10 @@ const resizeFile = async (
     maxIteration: iterations,
   })
     .then((compressedFile) => {
-      return compressedFile as File;
+      return new File([compressedFile], compressedFile.name, {
+        type: compressedFile.type,
+        lastModified: Date.now(),
+      }) as File;
     })
     .catch((error) => {
       console.error(error.message);
