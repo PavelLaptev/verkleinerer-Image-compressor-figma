@@ -50,12 +50,14 @@ const download = (
   };
 
   files.forEach((file, index) => {
-    zip.file(generateFileName(index), file, { date: new Date() });
+    const now = new Date();
+    const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+    zip.file(generateFileName(index), file, { date: localDate });
   });
 
   if (files.length > 1) {
     zip.generateAsync({ type: "blob" }).then((content) => {
-      saveAs(content, `tinify-${generateDateAndTime()}.zip`, { binary: true });
+      saveAs(content, `tinify-${timestamp}.zip`, { binary: true });
     });
   } else {
     saveAs(files[0], `${generateFileName(0)}`, {
